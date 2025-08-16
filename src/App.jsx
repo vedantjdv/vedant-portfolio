@@ -27,7 +27,7 @@ const portfolioData = {
       ],
     },
     {
-      title: 'Software Development Intern',
+      title: 'Software Engineering Intern',
       company: 'BharatNxt',
       date: 'Nov 2022 – Jun 2023',
       responsibilities: [
