@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 import { Github, Linkedin, Mail, SquarePen } from 'lucide-react';
 
 // Data can be easily managed in a separate file for better maintainability.
@@ -27,7 +29,7 @@ const portfolioData = {
       ],
     },
     {
-      title: 'Software Engineering Intern',
+      title: 'Software Development Intern',
       company: 'BharatNxt',
       date: 'Nov 2022 – Jun 2023',
       responsibilities: [
@@ -46,14 +48,15 @@ const portfolioData = {
     { name: 'Email', href: 'mailto:veerujadhav879@gmail.com', icon: <Mail size={20} /> },
     { name: 'GitHub', href: 'https://github.com/vedantjdv', icon: <Github size={20} /> },
     { name: 'LinkedIn', href: 'https://linkedin.com/in/ivedantjadhav', icon: <Linkedin size={20} /> },
-    // Replaced the non-existent 'Medium' icon with 'SquarePen'
     { name: 'Medium', href: 'https://medium.com/@vedantjdv', icon: <SquarePen size={20} /> },
   ],
 };
 
 // A reusable component for the Experience Card
-const ExperienceCard = ({ title, company, date, responsibilities }) => (
-  <div className="bg-gray-900 p-8 rounded-xl shadow-lg transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl">
+const ExperienceCard = ({ title, company, date, responsibilities, animation }) => (
+  <div className="bg-gray-900 p-8 rounded-xl shadow-lg transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
+    data-aos={animation}
+  >
     <h3 className="text-2xl font-semibold text-yellow-300 mb-2">{title}</h3>
     <p className="text-sm text-gray-400 mb-4 font-mono">{company} | {date}</p>
     <ul className="list-disc ml-6 text-gray-300 text-base space-y-2">
@@ -64,8 +67,15 @@ const ExperienceCard = ({ title, company, date, responsibilities }) => (
   </div>
 );
 
-// The main Portfolio component, broken into smaller sections
 const Portfolio = () => {
+  useEffect(() => {
+    AOS.init({
+      duration: 400,
+      once: true,
+      easing: 'ease-in-out',
+    });
+  }, []);
+
   const {
     name,
     title,
@@ -83,9 +93,9 @@ const Portfolio = () => {
         Skip to main content
       </a>
 
-      {/* Hero Section */}
+      {/* Hero Section (always visible) */}
       <header className="bg-gradient-to-br from-gray-900 to-gray-800 py-32 rounded-b-3xl shadow-xl">
-        <div className="max-w-6xl mx-auto px-6 md:px-8 text-center animate-fade-in">
+        <div className="max-w-6xl mx-auto px-6 md:px-8 text-center">
           <h1 className="text-5xl md:text-7xl font-extrabold mb-4 tracking-tight leading-tight">
             {name}
           </h1>
@@ -98,7 +108,6 @@ const Portfolio = () => {
                 key={index}
                 href={link.href}
                 className="group flex items-center space-x-2 text-gray-300 hover:text-yellow-400 transform transition-transform duration-300 hover:scale-105"
-                // Added rel="noopener noreferrer" for security
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -112,7 +121,7 @@ const Portfolio = () => {
       
       <main id="main-content">
         {/* About Section */}
-        <section className="py-24">
+        <section className="py-24" data-aos="fade-up">
           <div className="max-w-4xl mx-auto px-6 md:px-8">
             <h2 className="text-3xl font-bold mb-8 border-b-2 border-yellow-400 inline-block pb-1">
               About Me
@@ -131,14 +140,18 @@ const Portfolio = () => {
             </h2>
             <div className="grid md:grid-cols-2 gap-8">
               {experience.map((exp, index) => (
-                <ExperienceCard key={index} {...exp} />
+                <ExperienceCard
+                  key={index}
+                  {...exp}
+                  animation={index % 2 === 0 ? 'fade-right' : 'fade-left'}
+                />
               ))}
             </div>
           </div>
         </section>
 
         {/* Skills Section */}
-        <section className="py-24">
+        <section className="py-24" data-aos="zoom-in">
           <div className="max-w-4xl mx-auto px-6 md:px-8">
             <h2 className="text-3xl font-bold mb-8 border-b-2 border-yellow-400 inline-block pb-1">
               Technical Skills
@@ -157,7 +170,7 @@ const Portfolio = () => {
         </section>
 
         {/* Connect Section */}
-        <section className="py-24 bg-gray-900">
+        <section className="py-24 bg-gray-900" data-aos="fade-up">
           <div className="max-w-4xl mx-auto px-6 md:px-8 text-center">
             <h2 className="text-3xl font-bold mb-8 border-b-2 border-yellow-400 inline-block pb-1">
               Connect with Me
@@ -172,7 +185,6 @@ const Portfolio = () => {
                   key={index}
                   href={link.href}
                   className="group flex items-center space-x-2 bg-gray-800 px-6 py-3 rounded-lg shadow-md hover:bg-yellow-400 hover:text-gray-950 transition-all duration-300 transform hover:scale-105"
-                  // Added rel="noopener noreferrer" for security
                   target="_blank"
                   rel="noopener noreferrer"
                 >

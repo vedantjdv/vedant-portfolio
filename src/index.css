@@ -1,9 +1,11 @@
 /* This file must be processed by PostCSS for Tailwind's @tailwind rules to work */
 
 /* Tailwind CSS directives */
+@import "aos/dist/aos.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
