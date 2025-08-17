@@ -143,7 +143,7 @@ const Portfolio = () => {
                 <ExperienceCard
                   key={index}
                   {...exp}
-                  animation={index % 2 === 0 ? 'fade-right' : 'fade-left'}
+                  animation={index % 2 === 0 ? 'fade-up' : 'fade-up'}
                 />
               ))}
             </div>
