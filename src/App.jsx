@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { Github, Linkedin, Mail, SquarePen } from 'lucide-react';
 
-// Data can be easily managed in a separate file for better maintainability.
+// Data
 const portfolioData = {
   name: 'Vedant Jadhav',
   title: 'Backend Developer | Java • Golang • PostgreSQL • Spring Boot',
@@ -52,9 +52,10 @@ const portfolioData = {
   ],
 };
 
-// A reusable component for the Experience Card
+// Reusable Experience Card
 const ExperienceCard = ({ title, company, date, responsibilities, animation }) => (
-  <div className="bg-gray-900 p-8 rounded-xl shadow-lg transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
+  <div
+    className="bg-gray-900 p-8 rounded-xl shadow-lg transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
     data-aos={animation}
   >
     <h3 className="text-2xl font-semibold text-yellow-300 mb-2">{title}</h3>
@@ -68,12 +69,28 @@ const ExperienceCard = ({ title, company, date, responsibilities, animation }) =
 );
 
 const Portfolio = () => {
+  const [analytics, setAnalytics] = useState(null);
+
   useEffect(() => {
     AOS.init({
       duration: 400,
       once: true,
       easing: 'ease-in-out',
     });
+
+    // Fetch analytics on mount
+    const fetchAnalytics = async () => {
+      try {
+        const res = await fetch("https://analyticsengine.onrender.com/site-analytics?site_id=portfolio-website");
+        if (!res.ok) throw new Error("API failed");
+        const data = await res.json();
+        setAnalytics(data);
+      } catch (err) {
+        console.error("Analytics API failed, widget hidden.",err);
+      }
+    };
+
+    fetchAnalytics();
   }, []);
 
   const {
@@ -87,13 +104,22 @@ const Portfolio = () => {
   } = portfolioData;
 
   return (
-    <div className="bg-gray-950 text-white font-sans antialiased">
-      {/* Skip to Content for accessibility */}
+    <div className="bg-gray-950 text-white font-sans antialiased relative">
+      {/* Analytics Widget (only if API succeeds) */}
+      {analytics && (
+        <div className="fixed top-4 right-4 bg-gray-800 text-gray-200 px-4 py-3 rounded-lg shadow-lg text-sm z-50">
+          <p><span className="font-semibold text-yellow-400">Visitors:</span> {analytics.total_visits}</p>
+          <p><span className="font-semibold text-yellow-400">Unique:</span> {analytics.unique_visitors}</p>
+          <p><span className="font-semibold text-yellow-400">Returning:</span> {analytics.returning_visitors}</p>
+        </div>
+      )}
+
+      {/* Skip to Content */}
       <a href="#main-content" className="sr-only focus:not-sr-only">
         Skip to main content
       </a>
 
-      {/* Hero Section (always visible) */}
+      {/* Hero */}
       <header className="bg-gradient-to-br from-gray-900 to-gray-800 py-32 rounded-b-3xl shadow-xl">
         <div className="max-w-6xl mx-auto px-6 md:px-8 text-center">
           <h1 className="text-5xl md:text-7xl font-extrabold mb-4 tracking-tight leading-tight">
@@ -118,21 +144,19 @@ const Portfolio = () => {
           </div>
         </div>
       </header>
-      
+
       <main id="main-content">
-        {/* About Section */}
+        {/* About */}
         <section className="py-24" data-aos="fade-up">
           <div className="max-w-4xl mx-auto px-6 md:px-8">
             <h2 className="text-3xl font-bold mb-8 border-b-2 border-yellow-400 inline-block pb-1">
               About Me
             </h2>
-            <p className="text-gray-300 leading-relaxed text-lg">
-              {about}
-            </p>
+            <p className="text-gray-300 leading-relaxed text-lg">{about}</p>
           </div>
         </section>
 
-        {/* Experience Section */}
+        {/* Experience */}
         <section className="py-24 bg-gray-900">
           <div className="max-w-6xl mx-auto px-6 md:px-8">
             <h2 className="text-3xl font-bold mb-12 text-center border-b-2 border-yellow-400 inline-block pb-1">
@@ -143,14 +167,14 @@ const Portfolio = () => {
                 <ExperienceCard
                   key={index}
                   {...exp}
-                  animation={index % 2 === 0 ? 'fade-up' : 'fade-up'}
+                  animation="fade-up"
                 />
               ))}
             </div>
           </div>
         </section>
 
-        {/* Skills Section */}
+        {/* Skills */}
         <section className="py-24" data-aos="zoom-in">
           <div className="max-w-4xl mx-auto px-6 md:px-8">
             <h2 className="text-3xl font-bold mb-8 border-b-2 border-yellow-400 inline-block pb-1">
@@ -169,7 +193,7 @@ const Portfolio = () => {
           </div>
         </section>
 
-        {/* Connect Section */}
+        {/* Connect */}
         <section className="py-24 bg-gray-900" data-aos="fade-up">
           <div className="max-w-4xl mx-auto px-6 md:px-8 text-center">
             <h2 className="text-3xl font-bold mb-8 border-b-2 border-yellow-400 inline-block pb-1">
