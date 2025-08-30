@@ -3,6 +3,27 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { Github, Linkedin, Mail, SquarePen } from 'lucide-react';
 
+// Helper: track events with your backend
+const ANALYTICS_API = "https://analyticsengine.onrender.com";
+
+function trackEvent(eventType, metadata = {}) {
+  const sessionId = sessionStorage.getItem("sessionId") || crypto.randomUUID();
+  sessionStorage.setItem("sessionId", sessionId);
+
+  fetch(`${ANALYTICS_API}/track-event`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      site_id: "portfolio-website",
+      sessionId,
+      eventType,
+      metadata,
+      page: window.location.pathname,
+      timestamp: new Date().toISOString(),
+    }),
+  }).catch((err) => console.error("Event tracking failed", err));
+}
+
 // Data
 const portfolioData = {
   name: 'Vedant Jadhav',
@@ -91,6 +112,7 @@ const Portfolio = () => {
     };
 
     fetchAnalytics();
+    trackEvent("page_view", { title: document.title });
   }, []);
 
   const {
@@ -184,6 +206,7 @@ const Portfolio = () => {
               {skills.map((skill, index) => (
                 <li
                   key={index}
+                  onClick={() => trackEvent("skill_click", { skill })}
                   className="bg-gray-800 p-4 rounded-lg text-center shadow-md hover:bg-yellow-400 hover:text-gray-950 transition-all duration-300 transform hover:-translate-y-1"
                 >
                   {skill}
@@ -208,6 +231,7 @@ const Portfolio = () => {
                 <a
                   key={index}
                   href={link.href}
+                  onClick={() => trackEvent("link_click", { label: link.name, href: link.href })}
                   className="group flex items-center space-x-2 bg-gray-800 px-6 py-3 rounded-lg shadow-md hover:bg-yellow-400 hover:text-gray-950 transition-all duration-300 transform hover:scale-105"
                   target="_blank"
                   rel="noopener noreferrer"
