@@ -10,7 +10,7 @@ function trackEvent(eventType, metadata = {}) {
   const sessionId = sessionStorage.getItem("sessionId") || crypto.randomUUID();
   sessionStorage.setItem("sessionId", sessionId);
 
-  fetch(`${ANALYTICS_API}/track-event`, {
+  fetch(`${ANALYTICS_API}/track/event`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
