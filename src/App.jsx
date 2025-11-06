@@ -102,7 +102,7 @@ const Portfolio = () => {
     // Fetch analytics on mount
     const fetchAnalytics = async () => {
       try {
-        const res = await fetch("https://analyticsengine.onrender.com/track/AddVisitor?site_id=portfolio-website");
+        const res = await fetch("https://analyticsengine.onrender.com/track/AddVisitor?siteId=portfolio-website");
         if (!res.ok) throw new Error("API failed");
         const data = await res.json();
         setAnalytics(data);
